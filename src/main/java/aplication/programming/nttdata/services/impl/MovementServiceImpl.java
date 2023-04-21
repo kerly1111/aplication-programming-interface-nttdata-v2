@@ -19,8 +19,6 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -51,7 +49,7 @@ public class MovementServiceImpl implements IMovementService {
                                 })
                                 .flatMap(balance -> {
                                     Movement movement = new Movement();
-                                    movement.setDate(request.getDate());
+                                    movement.setDate(request.getDate().toLocalDate());
                                     movement.setMovementType(request.getMovementType());
                                     movement.setValue(request.getValue());
                                     movement.setIdAccount(account.getId());
@@ -66,7 +64,7 @@ public class MovementServiceImpl implements IMovementService {
                                     MovementResponseVO movementResponseVO = new MovementResponseVO();
                                     movementResponseVO.setAccountNumber(account.getAccountNumber());
                                     movementResponseVO.setAccountType(account.getAccountType());
-                                    movementResponseVO.setDate(movement.getDate());
+                                    movementResponseVO.setDate(Date.valueOf(movement.getDate()));
                                     movementResponseVO.setMovementType(movement.getMovementType());
                                     movementResponseVO.setValue(movement.getValue());
                                     movementResponseVO.setBalance(movement.getBalance());
@@ -84,7 +82,7 @@ public class MovementServiceImpl implements IMovementService {
                             MovementResponseVO movementResponseVO = new MovementResponseVO();
                             movementResponseVO.setAccountNumber(account.getAccountNumber());
                             movementResponseVO.setAccountType(account.getAccountType());
-                            movementResponseVO.setDate(movement.getDate());
+                            movementResponseVO.setDate(Date.valueOf(movement.getDate()));
                             movementResponseVO.setMovementType(movement.getMovementType());
                             movementResponseVO.setValue(movement.getValue());
                             movementResponseVO.setBalance(movement.getBalance());
@@ -110,7 +108,7 @@ public class MovementServiceImpl implements IMovementService {
                         .flatMap(balance -> {
                             Movement movement = new Movement();
                             movement.setId(idMovement);
-                            movement.setDate(request.getDate());
+                            movement.setDate(request.getDate().toLocalDate());
                             movement.setMovementType(request.getMovementType());
                             movement.setValue(request.getValue());
                             movement.setIdAccount(account.getId());
@@ -158,8 +156,8 @@ public class MovementServiceImpl implements IMovementService {
         return getInitialBalance(account, dateStart)
                 .flatMap(initialBalance -> Mono.zip(
                                 getBalance(account, dateStart, dateEnd, initialBalance),
-                                movementRepository.getBalanceByDate(account.getId(), "Deposito", dateStart, dateEnd).switchIfEmpty(Mono.just(0.00)),
-                                movementRepository.getBalanceByDate(account.getId(), "Retiro", dateStart, dateEnd).switchIfEmpty(Mono.just(0.00))
+                                movementRepository.getBalanceByDate(account.getId(), "Deposito", dateStart.toLocalDate(), dateEnd.toLocalDate()).switchIfEmpty(Mono.just(0.00)),
+                                movementRepository.getBalanceByDate(account.getId(), "Retiro", dateStart.toLocalDate(), dateEnd.toLocalDate()).switchIfEmpty(Mono.just(0.00))
                         )
                         .map(values -> {
                             BalanceValueVO balanceValueVO = new BalanceValueVO();
@@ -173,15 +171,21 @@ public class MovementServiceImpl implements IMovementService {
 
     private Mono<Double> getInitialBalance(Account account, Date dateStart) {
         return Mono.zip(
-                movementRepository.getBalancePrevious(account.getId(), "Deposito", dateStart).switchIfEmpty(Mono.just(0.00)),
-                movementRepository.getBalancePrevious(account.getId(), "Retiro", dateStart).switchIfEmpty(Mono.just(0.00))
-        ).map(values -> account.getInitialBalance() + values.getT1() - values.getT2());
+                        movementRepository.getBalancePrevious(account.getId(), "Deposito", dateStart.toLocalDate())
+                                .switchIfEmpty(Mono.just(0.00)),
+                        movementRepository.getBalancePrevious(account.getId(), "Retiro", dateStart.toLocalDate())
+                                .switchIfEmpty(Mono.just(0.00))
+                )
+                .map(values -> account.getInitialBalance() + values.getT1() - values.getT2())
+                .switchIfEmpty(Mono.just(0.00));
     }
 
     private Mono<Double> getBalance(Account account, Date dateStart, Date dateEnd, Double initialBalance) {
         return Mono.zip(
-                movementRepository.getBalanceByDate(account.getId(), "Deposito", dateStart, dateEnd).switchIfEmpty(Mono.just(0.00)),
-                movementRepository.getBalanceByDate(account.getId(), "Retiro", dateStart, dateEnd).switchIfEmpty(Mono.just(0.00))
-        ).map(values -> initialBalance + values.getT1() - values.getT2());
+                        movementRepository.getBalanceByDate(account.getId(), "Deposito", dateStart.toLocalDate(), dateEnd.toLocalDate()).switchIfEmpty(Mono.just(0.00)),
+                        movementRepository.getBalanceByDate(account.getId(), "Retiro", dateStart.toLocalDate(), dateEnd.toLocalDate()).switchIfEmpty(Mono.just(0.00))
+                )
+                .map(values -> initialBalance + values.getT1() - values.getT2())
+                .switchIfEmpty(Mono.just(0.00));
     }
 }

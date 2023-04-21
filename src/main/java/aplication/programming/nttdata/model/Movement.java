@@ -10,7 +10,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @SuperBuilder
 @NoArgsConstructor
@@ -26,7 +26,7 @@ public class Movement implements Serializable {
     @Column("id_movement")
     private Long id;
 
-    private Date date;
+    private LocalDate date;
 
     private String movementType;
 

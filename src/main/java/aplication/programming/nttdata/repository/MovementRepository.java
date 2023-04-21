@@ -6,7 +6,8 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
-import java.sql.Date;
+import java.time.LocalDate;
+
 
 @Repository
 public interface MovementRepository extends ReactiveCrudRepository<Movement, Long> {
@@ -14,7 +15,7 @@ public interface MovementRepository extends ReactiveCrudRepository<Movement, Lon
     @Query("select sum(m.value) from movement m where m.fk_account = :idAccount and m.movement_type = :movementType")
     Mono<Double> getBalance(Long idAccount, String movementType);
     @Query("select sum(m.value) from movement m where m.fk_account = :idAccount and m.movement_type = :movementType and m.date < :dateStart")
-    Mono<Double> getBalancePrevious(Long idAccount, String movementType, Date dateStart);
+    Mono<Double> getBalancePrevious(Long idAccount, String movementType, LocalDate dateStart);
     @Query("select sum(m.value) from movement m where m.fk_account = :idAccount and m.movement_type = :movementType and m.date between :dateStart and :dateEnd")
-    Mono<Double> getBalanceByDate(Long idAccount, String movementType, Date dateStart, Date dateEnd);
+    Mono<Double> getBalanceByDate(Long idAccount, String movementType, LocalDate dateStart, LocalDate dateEnd);
 }
