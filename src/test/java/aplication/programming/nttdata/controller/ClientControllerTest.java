@@ -1,22 +1,22 @@
 package aplication.programming.nttdata.controller;
 
-import aplication.programming.nttdata.common.exception.NttdataException;
+import aplication.programming.nttdata.MockUtils;
 import aplication.programming.nttdata.model.Client;
 import aplication.programming.nttdata.services.IClientService;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ContextConfiguration;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
-import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
-
+@SpringBootTest
+@ContextConfiguration(classes = {ClientControllerTest.class})
 class ClientControllerTest {
 
     @Mock
@@ -25,44 +25,43 @@ class ClientControllerTest {
     @InjectMocks
     private ClientController clientController;
 
-    private Client client;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
-
-        client = Client.builder()
-                .id(Long.valueOf(1))
-                .identification("1234567890")
-                .name("Jose Lema")
-                .gender("Masculino")
-                .age(20)
-                .address("Otavalo sn y principal")
-                .phone("098254785")
-                .password("1234")
-                .status(Boolean.TRUE)
-                .build();
-    }
-
     @Test
     void create() {
-        when(clientService.create(client)).thenReturn(Mono.just(new Client()));
-        assertNotNull(clientController.create(client));
+        Mockito.when(clientService.create(Mockito.any()))
+                .thenReturn(Mono.just(new Client()));
+        StepVerifier.create(clientController.create(MockUtils.buildClient()))
+                .consumeNextWith(response -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()))
+                .expectComplete()
+                .verify();
     }
 
     @Test
     void allClient() {
-        when(clientService.allClient()).thenReturn(Flux.just(client));
-        assertNotNull(clientController.allClient());
+        Mockito.when(clientService.allClient())
+                .thenReturn(Flux.just(MockUtils.buildClient()));
+        StepVerifier.create(clientController.allClient())
+                .consumeNextWith(response -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()))
+                .expectComplete()
+                .verify();
     }
 
     @Test
     void update() {
-        doThrow(new NttdataException()).when(clientService).update(client.getId(), client);
+        Mockito.when(clientService.update(Mockito.any(), Mockito.any()))
+                .thenReturn(Mono.empty());
+        StepVerifier.create(clientController.update(1L, MockUtils.buildClient()))
+                .consumeNextWith(response -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()))
+                .expectComplete()
+                .verify();
     }
 
     @Test
     void delete() {
-        doThrow(new NttdataException()).when(clientService).delete(client.getId());
+        Mockito.when(clientService.delete(Mockito.any()))
+                .thenReturn(Mono.empty());
+        StepVerifier.create(clientController.delete(1L))
+                .consumeNextWith(response -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode()))
+                .expectComplete()
+                .verify();
     }
 }

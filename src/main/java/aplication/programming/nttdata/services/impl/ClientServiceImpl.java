@@ -1,5 +1,6 @@
 package aplication.programming.nttdata.services.impl;
 
+import aplication.programming.nttdata.common.exception.NttdataError;
 import aplication.programming.nttdata.model.Client;
 import aplication.programming.nttdata.repository.ClientRepository;
 import aplication.programming.nttdata.services.IClientService;
@@ -22,25 +23,42 @@ public class ClientServiceImpl implements IClientService {
     @Transactional
     public Mono<Client> create(Client request) {
         return clientRepository.save(request)
-                .doOnError(error -> log.error("Error {}", error.getMessage()));
+                .onErrorResume(error -> {
+                    log.error("An error occurred while creating the client. Detail = {}", error.getMessage());
+                    return Mono.error(NttdataError.NTT006);
+                })
+                .doOnSuccess(success -> log.info("Client created successfully"));
     }
 
     @Override
     public Flux<Client> allClient() {
         return clientRepository.findAll()
-                .doOnError(error -> log.error("Error {}", error.getMessage()));
+                .onErrorResume(error -> {
+                    log.error("An error occurred while searching for customers. Detail = {}", error.getMessage());
+                    return Mono.error(NttdataError.NTT007);
+                });
     }
 
     @Override
     @Transactional
     public Mono<Void> update(Long idClient, Client request) {
        return clientRepository.save(request)
+               .onErrorResume(error -> {
+                   log.error("An error occurred while updating the client. Detail = {}", error.getMessage());
+                   return Mono.error(NttdataError.NTT008);
+               })
+               .doOnSuccess(success -> log.info("Client successfully upgraded"))
                .then();
     }
 
     @Override
     @Transactional
     public Mono<Void> delete(Long idClient) {
-       return clientRepository.deleteById(idClient);
+       return clientRepository.deleteById(idClient)
+               .onErrorResume(error -> {
+                   log.error("An error occurred while deleting the client. Detail = {}", error.getMessage());
+                   return Mono.error(NttdataError.NTT009);
+               })
+               .doOnSuccess(success -> log.info("Client successfully removed"));
     }
 }

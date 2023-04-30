@@ -1,6 +1,6 @@
 package aplication.programming.nttdata.services.impl;
 
-import aplication.programming.nttdata.common.exception.NttdataException;
+import aplication.programming.nttdata.common.exception.NttdataError;
 import aplication.programming.nttdata.model.Account;
 import aplication.programming.nttdata.repository.AccountRepository;
 import aplication.programming.nttdata.repository.ClientRepository;
@@ -28,11 +28,13 @@ public class AccountServiceImpl implements IAccountService {
     @Override
     @Transactional
     public Mono<AccountResponseVO> create(AccountRequestVO request) {
+        log.info("Start the account creation process");
         return clientRepository.findByIdentification(request.getIdentification())
-                .doOnError(error -> {
-                    log.error("Error search. Detail = {}", error.getMessage());
-                    Mono.error(new NttdataException(error.getMessage()));
+                .onErrorResume(error -> {
+                    log.error("An error occurred while searching for the client. Detail = {}", error.getMessage());
+                    return Mono.error(NttdataError.NTT001);
                 })
+                .doOnSuccess(success -> log.info("Client successfully obtained"))
                 .flatMap(client -> {
                             Account account = new Account();
                             account.setAccountNumber(request.getAccountNumber());
@@ -42,10 +44,11 @@ public class AccountServiceImpl implements IAccountService {
                             account.setIdClient(client.getId());
 
                             return accountRepository.save(account)
-                                    .doOnError(error -> {
-                                        log.error("Error create account. Detail = {}", error.getMessage());
-                                        Mono.error(new NttdataException("Error al crear la cuenta"));
+                                    .onErrorResume(error -> {
+                                        log.error("An error occurred while trying to save the customer account. Detail = {}", error.getMessage());
+                                        return Mono.error(NttdataError.NTT002);
                                     })
+                                    .doOnSuccess(success -> log.info("Customer account successfully saved"))
                                     .map(accountResponse -> {
                                         AccountResponseVO accountResponseVO = new AccountResponseVO();
                                         accountResponseVO.setAccountNumber(accountResponse.getAccountNumber());
@@ -56,12 +59,18 @@ public class AccountServiceImpl implements IAccountService {
                                         return accountResponseVO;
                                     });
                         }
-                );
+                )
+                .doOnSuccess(success -> log.info("Client account creation process completed successfully"));
     }
 
     @Override
     public Flux<AccountResponseVO> allAccount() {
+        log.info("Start of consultation of all accounts");
         return accountRepository.findAll()
+                .onErrorResume(error -> {
+                    log.error("An error occurred while consulting the accounts. Detail = {}", error.getMessage());
+                    return Mono.error(NttdataError.NTT003);
+                })
                 .flatMap(account -> clientRepository.findById(account.getIdClient())
                         .map(client -> {
                             AccountResponseVO accountResponseVO = new AccountResponseVO();
@@ -77,6 +86,7 @@ public class AccountServiceImpl implements IAccountService {
     @Override
     @Transactional
     public Mono<Void> update(Long idAccount, AccountRequestVO request) {
+            log.info("Start account update process");
         return Mono.just(request)
                 .flatMap(accountRequestVO -> {
                     Account account = new Account();
@@ -86,6 +96,11 @@ public class AccountServiceImpl implements IAccountService {
                     account.setInitialBalance(accountRequestVO.getInitialBalance());
                     account.setStatus(accountRequestVO.getStatus());
                     return accountRepository.save(account)
+                            .onErrorResume(error -> {
+                                log.error("An error occurred while updating the customer account. Detail = {}", error.getMessage());
+                                return Mono.error(NttdataError.NTT004);
+                            })
+                            .doOnSuccess(success -> log.info("Account update successful"))
                             .flatMap(response -> Mono.empty());
                 });
     }
@@ -93,6 +108,12 @@ public class AccountServiceImpl implements IAccountService {
     @Override
     @Transactional
     public Mono<Void> delete(Long idAccount) {
-        return accountRepository.deleteById(idAccount);
+        log.info("Start account deletion process");
+        return accountRepository.deleteById(idAccount)
+                .onErrorResume(error -> {
+                    log.error("An error occurred while deleting the customer account. Detail = {}", error.getMessage());
+                    return Mono.error(NttdataError.NTT005);
+                })
+                .doOnSuccess(success -> log.info("Account deletion successful"));
     }
 }

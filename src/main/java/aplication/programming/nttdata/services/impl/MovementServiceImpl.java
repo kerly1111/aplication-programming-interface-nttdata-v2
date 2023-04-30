@@ -1,6 +1,6 @@
 package aplication.programming.nttdata.services.impl;
 
-import aplication.programming.nttdata.common.exception.NttdataException;
+import aplication.programming.nttdata.common.exception.NttdataError;
 import aplication.programming.nttdata.model.Account;
 import aplication.programming.nttdata.model.Movement;
 import aplication.programming.nttdata.repository.AccountRepository;
@@ -36,6 +36,7 @@ public class MovementServiceImpl implements IMovementService {
     @Override
     @Transactional
     public Mono<MovementResponseVO> create(MovementRequestVO request) {
+        log.info("Start movement creation process");
         return accountRepository.findByAccountNumberByAccountType(request.getAccountNumber(), request.getAccountType())
                 .flatMap(account -> Mono.zip(
                                         movementRepository.getBalance(account.getId(), "Deposito").switchIfEmpty(Mono.just(0.00)),
@@ -43,7 +44,7 @@ public class MovementServiceImpl implements IMovementService {
                                 ).map(values -> account.getInitialBalance() + values.getT1() - values.getT2())
                                 .flatMap(balance -> {
                                     if (request.getMovementType().equals("Retiro") && (balance - request.getValue()) < 0) {
-                                        return Mono.error(new NttdataException("Saldo insuficiente para realizar la transacción"));
+                                        return Mono.error(NttdataError.NTT010);
                                     }
                                     return Mono.just(balance);
                                 })
@@ -58,7 +59,7 @@ public class MovementServiceImpl implements IMovementService {
                                     return movementRepository.save(movement)
                                             .onErrorResume(error -> {
                                                 log.error("Error {}", error.getMessage());
-                                                return Mono.error(new NttdataException("Error al crear el movimiento"));
+                                                return Mono.error(NttdataError.NTT011);
                                             });
                                 }).map(movement -> {
                                     MovementResponseVO movementResponseVO = new MovementResponseVO();
@@ -71,7 +72,8 @@ public class MovementServiceImpl implements IMovementService {
                                     movementResponseVO.setStatus(account.getStatus());
                                     return movementResponseVO;
                                 })
-                );
+                )
+                .doOnSuccess(success -> log.info("Movement created successfully"));
     }
 
     @Override
@@ -101,7 +103,8 @@ public class MovementServiceImpl implements IMovementService {
                         ).map(values -> account.getInitialBalance() + values.getT1() - values.getT2())
                         .flatMap(balance -> {
                             if (request.getMovementType().equals("Retiro") && (balance - request.getValue()) < 0) {
-                                return Mono.error(new NttdataException("Saldo insuficiente para realizar la transacción"));
+                                log.error("Insufficient balance to carry out the transaction");
+                                return Mono.error(NttdataError.NTT010);
                             }
                             return Mono.just(balance);
                         })
@@ -117,13 +120,15 @@ public class MovementServiceImpl implements IMovementService {
 
                             return movementRepository.save(movement)
                                     .then();
-                        }));
+                        }))
+                .doOnSuccess(success -> log.info("Movement updated successfully"));
     }
 
     @Override
     @Transactional
     public Mono<Void> delete(Long idMovement) {
-        return movementRepository.deleteById(idMovement);
+        return movementRepository.deleteById(idMovement)
+                .doOnSuccess(success -> log.info("Move successfully removed"));
 
     }
 
@@ -132,8 +137,8 @@ public class MovementServiceImpl implements IMovementService {
         return clientRepository.findByIdentification(identification)
                 .flatMapMany(client -> accountRepository.findAccountByIdClient(client.getId())
                         .onErrorResume(error -> {
-                            log.error("Error {}", error.getMessage());
-                            return Mono.error(new NttdataException("El usuario no asignado a la cuenta no existe."));
+                            log.error("An error occurred while consulting the client's account. Detail = {}", error.getMessage());
+                                return Mono.error(NttdataError.NTT012);
                         })
                         .flatMap(account -> processValues(account, dateStart, dateEnd)
                                 .map(values -> {

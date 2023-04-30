@@ -2,6 +2,7 @@ package aplication.programming.nttdata.controller;
 
 import aplication.programming.nttdata.model.Client;
 import aplication.programming.nttdata.services.IClientService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -17,24 +18,25 @@ public class ClientController {
     private IClientService clientService;
 
     @PostMapping
-    public Mono<Client> create(@RequestBody Client request){
-        return this.clientService.create(request);
+    public Mono<ResponseEntity<Client>> create(@RequestBody Client request){
+        return clientService.create(request)
+                .map(response -> ResponseEntity.ok().body(response));
     }
 
     @GetMapping
-    public Flux<Client> allClient(){
-        return this.clientService.allClient();
+    public Mono<ResponseEntity<Flux<Client>>> allClient(){
+        return Mono.just(ResponseEntity.ok().body(clientService.allClient()));
     }
 
     @PutMapping("/{idClient}")
-    public String update(@PathVariable Long idClient, @RequestBody Client request){
-        this.clientService.update(idClient, request);
-        return "Usuario actualizado exitosamente";
+    public Mono<ResponseEntity<String>> update(@PathVariable Long idClient, @RequestBody Client request){
+        return clientService.update(idClient, request)
+                .thenReturn(ResponseEntity.ok().body("User updated successfully"));
     }
 
     @DeleteMapping("/{idClient}")
-    public String delete(@PathVariable Long idClient){
-        this.clientService.delete(idClient);
-        return "Usuario eliminado exitosamente";
+    public Mono<ResponseEntity<String>> delete(@PathVariable Long idClient){
+        return clientService.delete(idClient)
+                .thenReturn(ResponseEntity.ok().body("User deleted successfully"));
     }
 }

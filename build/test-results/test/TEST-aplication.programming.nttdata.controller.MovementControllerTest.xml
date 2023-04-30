@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="aplication.programming.nttdata.controller.MovementControllerTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2023-04-30T18:47:03" hostname="DESKTOP-18N9LTL" time="0.029">
+  <properties/>
+  <testcase name="create()" classname="aplication.programming.nttdata.controller.MovementControllerTest" time="0.009"/>
+  <testcase name="delete()" classname="aplication.programming.nttdata.controller.MovementControllerTest" time="0.003"/>
+  <testcase name="report()" classname="aplication.programming.nttdata.controller.MovementControllerTest" time="0.005"/>
+  <testcase name="update()" classname="aplication.programming.nttdata.controller.MovementControllerTest" time="0.003"/>
+  <testcase name="allAccount()" classname="aplication.programming.nttdata.controller.MovementControllerTest" time="0.004"/>
+  <system-out><![CDATA[2023-04-30 13:47:03.155  INFO 11060 --- [    Test worker] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [aplication.programming.nttdata.controller.MovementControllerTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+2023-04-30 13:47:03.158  INFO 11060 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+2023-04-30 13:47:03.158  INFO 11060 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@dc1f7d1, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@5820e157, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@57b05c6b, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@42236688, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@405e6e62, org.springframework.test.context.support.DirtiesContextTestExecutionListener@1fab1567, org.springframework.test.context.transaction.TransactionalTestExecutionListener@4aad51fd, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@13e37906, org.springframework.test.context.event.EventPublishingTestExecutionListener@207d3866, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@67ba1123, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@47389690, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@4f9bfc38, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@6ec53a5, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@31e86952, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@32e7f5e9]
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.7.1)
+
+2023-04-30 13:47:03.187  INFO 11060 --- [    Test worker] a.p.n.controller.MovementControllerTest  : Starting MovementControllerTest using Java 11.0.15 on DESKTOP-18N9LTL with PID 11060 (started by KERKRIS in C:\Users\KERKRIS\Desktop\aplication-programming-interface-nttdata-main)
+2023-04-30 13:47:03.187  INFO 11060 --- [    Test worker] a.p.n.controller.MovementControllerTest  : No active profile set, falling back to 1 default profile: "default"
+2023-04-30 13:47:03.198  INFO 11060 --- [    Test worker] a.p.n.controller.MovementControllerTest  : Started MovementControllerTest in 0.038 seconds (JVM running for 10.022)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

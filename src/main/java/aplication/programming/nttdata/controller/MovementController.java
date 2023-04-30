@@ -4,6 +4,7 @@ import aplication.programming.nttdata.services.IMovementService;
 import aplication.programming.nttdata.vo.request.MovementRequestVO;
 import aplication.programming.nttdata.vo.response.MovementResponseVO;
 import aplication.programming.nttdata.vo.response.StatementResponseVO;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -19,31 +20,32 @@ public class MovementController {
     private IMovementService movementService;
 
     @PostMapping
-    public Mono<MovementResponseVO> create(@RequestBody MovementRequestVO request) {
-        return this.movementService.create(request);
+    public Mono<ResponseEntity<MovementResponseVO>> create(@RequestBody MovementRequestVO request) {
+        return movementService.create(request)
+                .map(response -> ResponseEntity.ok().body(response));
     }
 
     @GetMapping
-    public Flux<MovementResponseVO> allMovement() {
-        return this.movementService.allMovement();
+    public Mono<ResponseEntity<Flux<MovementResponseVO>>> allMovement() {
+        return Mono.just(ResponseEntity.ok().body(movementService.allMovement()));
     }
 
     @PutMapping("/{idMovement}")
-    public String update(@PathVariable Long idMovement, @RequestBody MovementRequestVO request) {
-        this.movementService.update(idMovement, request);
-        return "Movimeinto actualizado exitosamente";
+    public Mono<ResponseEntity<String>> update(@PathVariable Long idMovement, @RequestBody MovementRequestVO request) {
+        return movementService.update(idMovement, request)
+                .thenReturn(ResponseEntity.ok().body("Movement updated successfully"));
     }
 
     @DeleteMapping("/{idMovement}")
-    public String delete(@PathVariable Long idMovement) {
-        this.movementService.delete(idMovement);
-        return "Movimeinto eliminado exitosamente";
+    public Mono<ResponseEntity<String>> delete(@PathVariable Long idMovement) {
+        return movementService.delete(idMovement)
+                .thenReturn(ResponseEntity.ok().body("Move successfully removed"));
     }
 
     @GetMapping("/report")
-    public Flux<StatementResponseVO> report(@RequestParam Date dateStart, @RequestParam Date dateEnd,
+    public Mono<ResponseEntity<Flux<StatementResponseVO>>> report(@RequestParam Date dateStart, @RequestParam Date dateEnd,
                                             @RequestParam String identification) {
-        return this.movementService.report(dateStart, dateEnd, identification);
+        return Mono.just(ResponseEntity.ok().body(movementService.report(dateStart, dateEnd, identification)));
     }
 
 }

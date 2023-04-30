@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="aplication.programming.nttdata.services.impl.ClientServiceImplTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2023-04-30T18:47:03" hostname="DESKTOP-18N9LTL" time="0.037">
+  <properties/>
+  <testcase name="create()" classname="aplication.programming.nttdata.services.impl.ClientServiceImplTest" time="0.004"/>
+  <testcase name="delete()" classname="aplication.programming.nttdata.services.impl.ClientServiceImplTest" time="0.005"/>
+  <testcase name="allClient()" classname="aplication.programming.nttdata.services.impl.ClientServiceImplTest" time="0.004"/>
+  <testcase name="update()" classname="aplication.programming.nttdata.services.impl.ClientServiceImplTest" time="0.005"/>
+  <testcase name="updateFail()" classname="aplication.programming.nttdata.services.impl.ClientServiceImplTest" time="0.002"/>
+  <testcase name="allClientFail()" classname="aplication.programming.nttdata.services.impl.ClientServiceImplTest" time="0.002"/>
+  <testcase name="createFail()" classname="aplication.programming.nttdata.services.impl.ClientServiceImplTest" time="0.003"/>
+  <testcase name="deleteFail()" classname="aplication.programming.nttdata.services.impl.ClientServiceImplTest" time="0.003"/>
+  <system-out><![CDATA[2023-04-30 13:47:03.474  INFO 11060 --- [    Test worker] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [aplication.programming.nttdata.services.impl.ClientServiceImplTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+2023-04-30 13:47:03.475  INFO 11060 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+2023-04-30 13:47:03.476  INFO 11060 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@522febe6, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@1f2d0ac3, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@3ac3615d, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@727082b6, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@5fad37c5, org.springframework.test.context.support.DirtiesContextTestExecutionListener@28a155e1, org.springframework.test.context.transaction.TransactionalTestExecutionListener@9c91021, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@7fda569c, org.springframework.test.context.event.EventPublishingTestExecutionListener@49ff45bd, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@6bd30f3e, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@2a5a427d, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@7199f1c, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@34f8e0ef, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@4721b3b1, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@3f905882]
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.7.1)
+
+2023-04-30 13:47:03.494  INFO 11060 --- [    Test worker] a.p.n.s.impl.ClientServiceImplTest       : Starting ClientServiceImplTest using Java 11.0.15 on DESKTOP-18N9LTL with PID 11060 (started by KERKRIS in C:\Users\KERKRIS\Desktop\aplication-programming-interface-nttdata-main)
+2023-04-30 13:47:03.495  INFO 11060 --- [    Test worker] a.p.n.s.impl.ClientServiceImplTest       : No active profile set, falling back to 1 default profile: "default"
+2023-04-30 13:47:03.506  INFO 11060 --- [    Test worker] a.p.n.s.impl.ClientServiceImplTest       : Started ClientServiceImplTest in 0.028 seconds (JVM running for 10.33)
+2023-04-30 13:47:03.510  INFO 11060 --- [    Test worker] a.p.n.services.impl.ClientServiceImpl    : Client created successfully
+2023-04-30 13:47:03.517  INFO 11060 --- [    Test worker] a.p.n.services.impl.ClientServiceImpl    : Client successfully removed
+2023-04-30 13:47:03.528  INFO 11060 --- [    Test worker] a.p.n.services.impl.ClientServiceImpl    : Client successfully upgraded
+2023-04-30 13:47:03.533 ERROR 11060 --- [    Test worker] a.p.n.services.impl.ClientServiceImpl    : An error occurred while updating the client. Detail = null
+2023-04-30 13:47:03.537 ERROR 11060 --- [    Test worker] a.p.n.services.impl.ClientServiceImpl    : An error occurred while searching for customers. Detail = null
+2023-04-30 13:47:03.541 ERROR 11060 --- [    Test worker] a.p.n.services.impl.ClientServiceImpl    : An error occurred while creating the client. Detail = null
+2023-04-30 13:47:03.544 ERROR 11060 --- [    Test worker] a.p.n.services.impl.ClientServiceImpl    : An error occurred while deleting the client. Detail = null
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

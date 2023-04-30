@@ -3,6 +3,7 @@ package aplication.programming.nttdata.controller;
 import aplication.programming.nttdata.services.IAccountService;
 import aplication.programming.nttdata.vo.request.AccountRequestVO;
 import aplication.programming.nttdata.vo.response.AccountResponseVO;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,24 +25,25 @@ public class AccountController {
     private IAccountService accountService;
 
     @PostMapping
-    public Mono<AccountResponseVO> create(@RequestBody AccountRequestVO request){
-        return this.accountService.create(request);
+    public Mono<ResponseEntity<AccountResponseVO>> create(@RequestBody AccountRequestVO request){
+        return accountService.create(request)
+                .map(response -> ResponseEntity.ok().body(response));
     }
 
     @GetMapping
-    public Flux<AccountResponseVO> allAccount(){
-        return this.accountService.allAccount();
+    public Mono<ResponseEntity<Flux<AccountResponseVO>>> allAccount(){
+        return Mono.just(ResponseEntity.ok().body(accountService.allAccount()));
     }
 
     @PutMapping("/{idAccount}")
-    public String update(@PathVariable Long idAccount, @RequestBody AccountRequestVO request){
-        this.accountService.update(idAccount, request);
-        return "Cuenta actualizada exitosamente";
+    public Mono<ResponseEntity<String>> update(@PathVariable Long idAccount, @RequestBody AccountRequestVO request){
+        return accountService.update(idAccount, request)
+                .thenReturn(ResponseEntity.ok().body("Account updated successfully"));
     }
 
     @DeleteMapping("/{idAccount}")
-    public String delete(@PathVariable Long idAccount){
-        this.accountService.delete(idAccount);
-        return "Cuenta eliminado exitosamente";
+    public Mono<ResponseEntity<String>> delete(@PathVariable Long idAccount){
+        return accountService.delete(idAccount)
+                .thenReturn(ResponseEntity.ok().body("Account deleted successfully"));
     }
 }
